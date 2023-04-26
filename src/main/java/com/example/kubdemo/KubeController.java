@@ -17,6 +17,6 @@ public class KubeController {
             i+= Math.sqrt(i);
         }
         String hostname = InetAddress.getLocalHost().getHostName();
-        return "Hello World v2 from " + hostname + " " + i;
+        return "Hello World from " + hostname + " " + i;
     }
 }

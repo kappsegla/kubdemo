@@ -31,11 +31,14 @@ kubectl get hpa --watch
 kubectl top node
 https://www.kubecost.com/kubernetes-autoscaling/kubernetes-hpa/
 https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
-Apply hpa.yaml  (namespace kube-system if started from intellij)
+Apply hpa.yaml
 kubectl get hpa -n kube-system
 
 Rolling updates
 https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/
+
+kubectl rollout history deployment my-dep
+kubectl rollout status deployments/deploymentname
 
 //Ingress on Docker desktop we need to install controller first.
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.7.0/deploy/static/provider/cloud/deploy.yaml
