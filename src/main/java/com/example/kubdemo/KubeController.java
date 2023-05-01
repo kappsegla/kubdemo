@@ -31,4 +31,14 @@ public class KubeController {
         });
         return builder.toString();
     }
+
+    @GetMapping("/showheaders")
+    public String showHeaders(@RequestHeader Map<String, String> headers){
+        StringBuilder builder = new StringBuilder();
+        headers.forEach((key, value) -> {
+            builder.append(String.format("Header '%s' = %s", key, value));
+            builder.append("\n");
+        });
+        return builder.toString();
+    }
 }
