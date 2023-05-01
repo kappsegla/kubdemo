@@ -1,10 +1,12 @@
 package com.example.kubdemo;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Map;
 
 @RestController
 public class KubeController {
@@ -18,5 +20,15 @@ public class KubeController {
         }
         String hostname = InetAddress.getLocalHost().getHostName();
         return "Hello World from " + hostname + " " + i;
+    }
+
+    @GetMapping("/showheaders")
+    public String showHeaders(@RequestHeader Map<String, String> headers){
+        StringBuilder builder = new StringBuilder();
+        headers.forEach((key, value) -> {
+            builder.append(String.format("Header '%s' = %s", key, value));
+            builder.append("\n");
+        });
+        return builder.toString();
     }
 }
