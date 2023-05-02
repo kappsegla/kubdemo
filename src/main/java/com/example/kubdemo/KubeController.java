@@ -11,6 +11,12 @@ import java.util.Map;
 @RestController
 public class KubeController {
 
+    private ClientConfig config;
+
+    public KubeController(ClientConfig config) {
+        this.config = config;
+    }
+
     @GetMapping("/")
     public String index() throws UnknownHostException {
 
@@ -19,7 +25,7 @@ public class KubeController {
             i+= Math.sqrt(i);
         }
         String hostname = InetAddress.getLocalHost().getHostName();
-        return "Hello World from " + hostname + " " + i;
+        return config.getMessage() + " " + hostname + " " + i;
     }
 
     @GetMapping("/showheaders")

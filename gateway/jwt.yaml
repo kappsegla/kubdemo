@@ -27,9 +27,11 @@ spec:
   jwtRules:
     - issuer: "https://fungover.org/auth"
       jwksUri: https://fungover.org/auth/.well-known/jwks.json
-#      outputClaimToHeaders:
-#        - header: "x-jwt-claim-sub"
-#          claim: "sub"
+      outputClaimToHeaders:
+        - header: "x-jwt-claim-sub"
+          claim: "sub"
+        - header: "x-jwt-scope"
+          claim: "scope"
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute

@@ -12,6 +12,10 @@ spec:
     - from:
       - source:
           requestPrincipals: ["*"]
-#      when:
-#        - key: request.auth.claims[scope]
-#          values: [ "read" ]
+#      to:
+#        - operation:
+#            methods: ["GET"]
+#            paths: ["/showheaders"]
+      when:
+        - key: request.auth.claims[scope]
+          values: [ "read" ]
