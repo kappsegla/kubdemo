@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authservice
+  labels:
+    app: authservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authservice
+  template:
+    metadata:
+      name: authservice
+      labels:
+        app: authservice
+    spec:
+      containers:
+        - name: authservice
+          image: ghcr.io/chatgut/authservice2:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DB_URL
+              value: mysql:3306/auth-DB1
+            - name: DB_USER
+              value: developer
+            - name: DB_PASS
+              value: password
+          ports:
+          - containerPort: 8080
+            name: authservice
+      restartPolicy:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authservice
+  namespace: default
+  labels:
+    app: authservice
+    service: authservice
+spec:
+  selector:
+    app: authservice
+  ports:
+    - name: http
+      port: 8080 # The port that the service is running on in the cluster
+      targetPort: 8080 # The port exposed by the service

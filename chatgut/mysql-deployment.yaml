@@ -7,7 +7,7 @@ spec:
     - port: 3306
   selector:
     app: mysql
-  clusterIP: None
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -28,9 +28,16 @@ spec:
         - image: mysql:latest
           name: mysql
           env:
-            # Use secret in real usage
             - name: MYSQL_ROOT_PASSWORD
               value: password
+            - name: MYSQL_DATABASE
+              value: auth-DB1
+            - name: MYSQL_USER
+              value: developer
+            - name: MYSQL_PASSWORD
+              value: password
+            - name: MYSQL_ROOT_HOST
+              value: '%'
           ports:
             - containerPort: 3306
               name: mysql
