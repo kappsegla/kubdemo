@@ -14,3 +14,25 @@ spec:
       hosts:
         - "*"
 ---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: virtualservice
+  namespace: default
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - jwt-gateway
+  http:
+    - name: auth
+      match:
+      - uri:
+         prefix: /auth
+      - uri:
+         prefix: /login
+      rewrite:
+        uri: /api/auth/login
+      route:
+        - destination:
+            host: authservice.default.svc.cluster.local
