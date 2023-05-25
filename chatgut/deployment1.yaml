@@ -29,7 +29,6 @@ spec:
           ports:
           - containerPort: 8080
             name: authservice
-      restartPolicy:
 ---
 apiVersion: v1
 kind: Service
