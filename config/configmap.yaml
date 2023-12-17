@@ -7,4 +7,5 @@ metadata:
     spring.cloud.kubernetes.config: "true"
 data:
   application.properties: |-
-    bean.message=Hello!
+    bean.message=Hello Martin!
+    bean.showheaders=false

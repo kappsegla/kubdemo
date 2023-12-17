@@ -42,9 +42,9 @@ spec:
               memory: "200Mi"
           name: spring-test-app
           image: spring-boot-kube:v1 # Image that will be used to containers in the cluster
-#          env:
-#            - name: SOME_ENV_VARIABLE
-#              value: hello
+          env:
+            - name: SOME_ENV_VARIABLE
+              value: hello
           livenessProbe:
             failureThreshold: 3
             httpGet:

@@ -3,6 +3,8 @@ kind: Gateway
 metadata:
   name: jwt-gateway
   namespace: default
+  labels:
+    app: gateway
 spec:
   selector:
     istio: ingressgateway
@@ -28,11 +30,39 @@ spec:
     - name: auth
       match:
       - uri:
-         prefix: /auth
-      - uri:
-         prefix: /login
+         prefix: /showheaders
       rewrite:
-        uri: /api/auth/login
+        uri: /
       route:
         - destination:
-            host: authservice.default.svc.cluster.local
+            host: backend
+---
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: "jwt-example"
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  jwtRules:
+    - issuer: "https://fungover.org/auth"
+      jwksUri: https://fungover.org/auth/.well-known/jwks.json
+      outputClaimToHeaders:
+        - header: "userID"
+          claim: "sub"
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: require-jwt-for-all
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  rules:
+    - from:
+        - source:
+            requestPrincipals: ["*"]
