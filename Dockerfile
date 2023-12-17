@@ -1,20 +1,21 @@
-FROM maven:3.9-eclipse-temurin-20 as builder
-COPY src /app/src
-COPY pom.xml /app
-RUN mvn --file /app/pom.xml clean package
-WORKDIR application
-ARG JAR_FILE=/app/target/*.jar
-RUN cp ${JAR_FILE} application.jar
-RUN java -Djarmode=layertools -jar application.jar extract
+FROM maven:3-eclipse-temurin-21-alpine AS builder
+WORKDIR build
+COPY . .
+RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:20-jre
-RUN adduser --system --group spring
-USER spring:spring
-ENV PORT 8080
-EXPOSE 8080
-WORKDIR application
-COPY --from=builder application/dependencies/ ./
-COPY --from=builder application/snapshot-dependencies/ ./
-COPY --from=builder application/spring-boot-loader/ ./
-COPY --from=builder application/application/ ./
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+FROM eclipse-temurin:21-jre-alpine AS layers
+WORKDIR layer
+COPY --from=builder /build/target/*.jar app.jar
+RUN java -Djarmode=layertools -jar app.jar extract
+
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /opt/app
+RUN addgroup --system appuser && adduser -S -s /usr/sbin/nologin -G appuser appuser
+COPY --from=layers /layer/dependencies/ ./
+COPY --from=layers /layer/spring-boot-loader/ ./
+COPY --from=layers /layer/snapshot-dependencies/ ./
+COPY --from=layers /layer/application/ ./
+RUN chown -R appuser:appuser /opt/app
+USER appuser
+HEALTHCHECK --start-period=60s --interval=180s --timeout=3s --retries=3 CMD wget -qO- http://localhost:8080/actuator/health/ | grep UP || exit 1
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]

@@ -6,13 +6,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.file.Path;
 import java.util.Map;
 
 @RestController
 public class KubeController {
 
-//    private ClientConfig config;
+    //private ClientConfig config;
 
     // public KubeController(ClientConfig config) {
     //     this.config = config;
@@ -25,8 +24,7 @@ public class KubeController {
             i += Math.sqrt(i);
         }
         String hostname = InetAddress.getLocalHost().getHostName();
-        return "Hello World version 2 from " + hostname + " " + i;
-        //     return config.getMessage() + " " + hostname + " " + i;
+        return "Hello World version 1 from " + hostname + " with random number" + i;
     }
 
     @GetMapping("/showheaders")

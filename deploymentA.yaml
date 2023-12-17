@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment # Kubernetes resource kind we are creating
+metadata:
+  name: spring-app
+  namespace: default
+  labels:
+    app: spring
+spec:
+  selector:
+    matchLabels:
+      app: spring
+  replicas: 1 # Number of replicas that will be created for this deployment
+  template:
+    metadata:
+      labels:
+        app: spring
+    spec:
+      containers:
+        - resources:
+            requests:
+              memory: "200Mi"
+              cpu: "100m"
+            limits:
+              memory: "200Mi"
+          name: spring-test-app
+          image: spring-boot-kube:v1 # Image that will be used to containers in the cluster
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /livez
+              port: 8080
+            periodSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /readyz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080 # The port that the container is running on in the cluster
